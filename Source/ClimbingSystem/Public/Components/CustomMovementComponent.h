@@ -100,6 +100,6 @@ protected:
 public:
 	void ToggleClimbing(bool bEnableClimb);
 	bool IsClimbing() const;
-
+	FORCEINLINE FVector GetClimbableSurfaceNormal() const {return CurrentClimbableSurfaceNormal;}
 
 };
