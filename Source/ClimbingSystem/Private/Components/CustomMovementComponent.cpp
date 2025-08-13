@@ -87,6 +87,21 @@ float UCustomMovementComponent::GetMaxAcceleration() const
     }
 }
 
+FVector UCustomMovementComponent::ConstrainAnimRootMotionVelocity(const FVector &RootMotionVelocity, const FVector &CurrentVelocity) const
+{
+    const bool bIsPlayingRMMontage =
+    IsFalling() && OwningPlayerAnimInstance && OwningPlayerAnimInstance->IsAnyMontagePlaying();
+
+    if(bIsPlayingRMMontage)
+    {
+        return RootMotionVelocity;
+    }
+    else
+    {
+        return Super::ConstrainAnimRootMotionVelocity(RootMotionVelocity,CurrentVelocity);
+    }
+}
+
 #pragma region ClimbTraces
 
 TArray<FHitResult> UCustomMovementComponent::DoCapsuleTraceMultiByObject(const FVector &Start, const FVector &End, bool bShowDebugShape, bool bDrawPersistantShapes) 
@@ -243,11 +258,7 @@ void UCustomMovementComponent::PhysClimb(float deltaTime, int32 Iterations)
 
     if(CheckHasReachedLedge())
     {
-        Debug::Print(TEXT("Ledge reached"),FColor::Green,1);
-    }
-    else
-    {
-        Debug::Print(TEXT("Ledge not reached"),FColor::Red,1);
+        PlayClimbMontage(ClimbToTopMontage);
     }
 }
 
@@ -353,7 +364,7 @@ bool UCustomMovementComponent::CheckHasReachedLedge()
         const FVector WalkableSurfaceTraceEnd = WalkableSurfaceTraceStart + DownVector * 100.f;
 
         FHitResult WalkableSurfaceHitResult =
-        DoLineTraceSingleByObject(WalkableSurfaceTraceStart,WalkableSurfaceTraceEnd,true);
+        DoLineTraceSingleByObject(WalkableSurfaceTraceStart,WalkableSurfaceTraceEnd);
 
         if(WalkableSurfaceHitResult.bBlockingHit && GetUnrotatedClimbVelocity().Z > 10.f)
         {
@@ -406,6 +417,10 @@ void UCustomMovementComponent::OnClimbMontageEnded(UAnimMontage *Montage, bool b
     if(Montage == IdleToClimbMontage) 
     {
         StartClimbing();
+    }
+    else
+    {
+        SetMovementMode(MOVE_Walking);
     }
 }
 
