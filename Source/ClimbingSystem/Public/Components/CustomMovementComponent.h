@@ -76,6 +76,10 @@ protected:
 
 	bool CheckHasReachedLedge();
 
+	void TryStartVaulting();
+
+	bool CanStartVaulting(FVector& OutVaultStartPosition,FVector& OutVaultLandPosition);
+
 	void PlayClimbMontage(UAnimMontage* MontageToPlay);
 
 	UFUNCTION()
