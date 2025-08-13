@@ -71,6 +71,8 @@ protected:
 
 	void SnapMovementToClimbableSurfaces(float DeltaTime);
 
+	bool CheckHasReachedLedge();
+
 	void PlayClimbMontage(UAnimMontage* MontageToPlay);
 
 	UFUNCTION()
