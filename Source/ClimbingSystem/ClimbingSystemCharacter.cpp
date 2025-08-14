@@ -82,6 +82,7 @@ void AClimbingSystemCharacter::AddInputMappingContext(UInputMappingContext * Con
 		}
 	}
 
+
 }
 
 void AClimbingSystemCharacter::RemoveInputMappingContext(UInputMappingContext * ContextToAdd)
@@ -117,6 +118,8 @@ void AClimbingSystemCharacter::SetupPlayerInputComponent(class UInputComponent *
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AClimbingSystemCharacter::Look);
 
 		EnhancedInputComponent->BindAction(ClimbAction, ETriggerEvent::Started, this, &AClimbingSystemCharacter::OnClimbActionStarted);
+
+		EnhancedInputComponent->BindAction(ClimbHopAction, ETriggerEvent::Started, this, &AClimbingSystemCharacter::OnClimbHopActionStarted);
 	}
 
 }
@@ -194,13 +197,14 @@ void AClimbingSystemCharacter::OnClimbActionStarted(const FInputActionValue &Val
 void AClimbingSystemCharacter::OnPlayerEnterClimbState()
 {
 	AddInputMappingContext(ClimbMappingContext,1);
-
-	Debug::Print(TEXT("Entered climb state"));
 }
 
 void AClimbingSystemCharacter::OnPlayerExitClimbState()
 {
 	RemoveInputMappingContext(ClimbMappingContext);
+}
 
-	Debug::Print(TEXT("Exited climb state"));
+void AClimbingSystemCharacter::OnClimbHopActionStarted(const FInputActionValue &Value)
+{
+	Debug::Print(TEXT("Hopping Started"));
 }
