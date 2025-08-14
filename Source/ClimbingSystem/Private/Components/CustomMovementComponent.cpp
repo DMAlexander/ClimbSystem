@@ -418,62 +418,62 @@ bool UCustomMovementComponent::CheckHasReachedLedge()
 }
 
 void UCustomMovementComponent::TryStartVaulting()
-{
-    FVector VaultStartPosition;
-    FVector VaultLandPositon;
+{	
+	FVector VaultStartPosition;
+	FVector VaultLandPosition;
 
-    if(CanStartVaulting(VaultStartPosition,VaultLandPositon))
-    {
-        SetMotionWarpTarget(FName("VaultStartPoint"),VaultStartPosition);
-        SetMotionWarpTarget(FName("VaultEndPoint"),VaultLandPositon);
+	if(CanStartVaulting(VaultStartPosition,VaultLandPosition))
+	{
+		SetMotionWarpTarget(FName("VaultStartPoint"),VaultStartPosition);
+		SetMotionWarpTarget(FName("VaultEndPoint"),VaultLandPosition);
 
-        StartClimbing();
-        PlayClimbMontage(VaultMontage);
-    }
-
+		StartClimbing();
+		PlayClimbMontage(VaultMontage);
+	}
+	
 }
 
-bool UCustomMovementComponent::CanStartVaulting(FVector &OutVaultStartPosition, FVector &OutVaultLandPosition)
+bool UCustomMovementComponent::CanStartVaulting(FVector& OutVaultStartPosition,FVector& OutVaultLandPosition)
 {
-    if(IsFalling()) return false;
+	if(IsFalling()) return false;
 
-    OutVaultStartPosition = FVector::ZeroVector;
-    OutVaultLandPosition = FVector::ZeroVector;
+	OutVaultStartPosition = FVector::ZeroVector;
+	OutVaultLandPosition = FVector::ZeroVector;
 
-    const FVector ComponentLocation = UpdatedComponent->GetComponentLocation();
-    const FVector ComponentForward = UpdatedComponent->GetForwardVector();
-    const FVector UpVector = UpdatedComponent->GetUpVector();
-    const FVector DownVector = -UpdatedComponent->GetUpVector();
+	const FVector ComponentLocation = UpdatedComponent->GetComponentLocation();
+	const FVector ComponentForward = UpdatedComponent->GetForwardVector();
+	const FVector UpVector = UpdatedComponent->GetUpVector();
+	const FVector DownVector = -UpdatedComponent->GetUpVector();
 
-    for(int32 i = 0; i<5; i++)
-    {
-        const FVector Start = ComponentLocation + UpVector * 100.f =
-        ComponentForward * 100.f * (i+1);
+	for(int32 i = 0; i<5; i++)
+	{
+		const FVector Start = ComponentLocation + UpVector * 100.f + 
+		ComponentForward * 80.f * (i+1);
 
-        const FVector End = Start + DownVector * 100.f * (i+1);
+		const FVector End = Start + DownVector * 100.f * (i+1);
 
-        FHitResult VaultTraceHit = DoLineTraceSingleByObject(Start,End);
+		FHitResult VaultTraceHit = DoLineTraceSingleByObject(Start,End);
 
-        if(i == 0 && VaultTraceHit.bBlockingHit)
-        {
-            OutVaultStartPosition = VaultTraceHit.ImpactPoint;
-        }
+		if(i == 0 && VaultTraceHit.bBlockingHit)
+		{
+			OutVaultStartPosition = VaultTraceHit.ImpactPoint;
+		}
 
-        if(i == 3 && VaultTraceHit.bBlockingHit)
-        {
-            OutVaultLandPosition = VaultTraceHit.ImpactPoint;
-        }
-    }
+		if(i == 3 && VaultTraceHit.bBlockingHit)
+		{
+			OutVaultLandPosition = VaultTraceHit.ImpactPoint;
+		}
+	}
 
-    if(OutVaultStartPosition!=FVector::ZeroVector && OutVaultLandPosition!=FVector::ZeroVector)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-
+	if(OutVaultStartPosition!=FVector::ZeroVector && OutVaultLandPosition!=FVector::ZeroVector)
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+	
 }
 
 bool UCustomMovementComponent::IsClimbing() const
