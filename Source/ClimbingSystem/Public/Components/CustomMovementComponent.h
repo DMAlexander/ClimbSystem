@@ -99,6 +99,10 @@ protected:
 
 	bool CheckCanHopUp(FVector& OutHopUpTargetPosition);
 
+	void HandleHopDown();
+
+	bool CheckCanHopDown(FVector& OutHopDownTargetPosition);
+
 #pragma endregion
 
 #pragma region ClimbCoreVariables
@@ -157,6 +161,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Character Movement: Climbing",meta = (AllowPrivateAccess = "true"))
 	UAnimMontage* HopUpMontage;
+
+	UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Character Movement: Climbing",meta = (AllowPrivateAccess = "true"))
+	UAnimMontage* HopDownMontage;
 	
 #pragma endregion
 
